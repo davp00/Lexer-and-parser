@@ -45,7 +45,7 @@ class Parser:
                 for key in keys:
                     compare_key = self.compare(key, vec)
                     if compare_key is 1:
-                        return self.syntax(key, vec)
+                        value = self.syntax(key, vec)
                     elif compare_key:
                         pass
                     else:
@@ -54,13 +54,15 @@ class Parser:
             if cont == len(components):
                 return False
             return True
-        except :
+        except ValueError:
             return False
 
     def compare(self, key, vec):
         if key in self.lexer.dictionary:
-            data = vec[0]
-
+            if len(vec) != 0:
+                data = vec[0]
+            else:
+                return False
             value = self.lexer.compare(key, data)
             print("{} -> {} = {}".format(key, data, value))
             if value:
