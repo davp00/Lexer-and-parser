@@ -2,7 +2,9 @@ from components.lexer import Lexer
 from components.parser import Parser
 
 text = """
-    if(a > b)
+    int a = 30;
+    int b = 30;
+    if ( a < 30)
     {
     }
 """
@@ -41,10 +43,4 @@ parser.add_rule(key='<Condition>', components='<LPar> <Comparable> <RPar>')
 parser.add_rule(key='<IfCondition>', components='<Control> <Condition> <LBrace> <RBrace>')
 
 tokens = lexer.split(text)
-
-syntax = parser.parse_vec('<IfCondition>', tokens)
-if syntax:
-    print(parser.last_key, parser.last_component)
-    print('Analisis correcto')
-else:
-    print('ERROR EN LA SINTAXIS')
+parser.analyze(tokens)

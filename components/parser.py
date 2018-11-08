@@ -44,7 +44,7 @@ class Parser:
                         return False
                 else:
                     if self.compare(key, vec) is False:
-                        print('_________________________')
+                        # print('_________________________')
                         vec = tk
                         cont = cont + 1
                         break
@@ -56,7 +56,7 @@ class Parser:
     def parse_vec(self, rule_key, vec):
         value = self.syntax(rule_key, vec)
         if value:
-            return self.last_key == self.last_component.pop()
+            return self.last_key == self.last_component.pop(), value[1]
         else:
             return False
 
@@ -68,7 +68,7 @@ class Parser:
                 return False
             value = self.lexer.compare(key, data)
             self.last_key = key
-            print("{} -> \'{}\' = {}".format(key, data, value))
+            # print("{} -> \'{}\' = {}".format(key, data, value))
             vec.pop(0)
             return value
         else:
@@ -76,3 +76,24 @@ class Parser:
 
     def get_keys(self, cad):
         return re.findall(self.regex, cad)
+
+    def analyze(self, tokens):
+        cont = 0
+        value = None
+        for token in tokens:
+            vec = tokens[cont: len(tokens)]
+            cont = cont + 1
+            if self.lexer.compare('<Literal>', token):
+                value = self.parse_vec('<VarAssign>', vec)
+
+            elif self.lexer.compare('<Control>', token):
+                value = self.parse_vec('<IfCondition>', vec)
+
+            if value:
+                print('Analisis Correcto')
+                self.analyze(value[1])
+                return True
+            else:
+                print('Error en la sintaxis')
+                return False
+            break
