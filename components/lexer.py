@@ -2,6 +2,8 @@ import re
 
 
 class Lexer:
+    patern = re.compile("[a-zA-Z]+|[0-9]+|[=]+|[;]|[<|>]|[+]+|[(|)]|[{|}]|[*-/]")
+
     def __init__(self):
         self.dictionary = {}
         self.tokens = []
@@ -24,8 +26,7 @@ class Lexer:
                 return val
 
             elif dictionary_key.get('regex'):
-
-                return re.search(dictionary_key.get('regex'), data)
+                return True if re.search(dictionary_key.get('regex'), data) else False
 
             else:
                 print('ERROR: DATA')
@@ -33,5 +34,7 @@ class Lexer:
         else:
             print('ERROR: KEY doesn\'t exist')
 
-    def split(self):
-        pass
+    def split(self, text):
+        tokens = []
+
+        return self.patern.findall(text)
