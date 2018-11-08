@@ -4,7 +4,7 @@ from components.parser import Parser
 text = """
     int a = 30;
     int b = 30;
-    if ( a < 30)
+    if ( a > b )
     {
     }
 """
