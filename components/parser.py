@@ -8,6 +8,9 @@ class Parser:
     def __init__(self, lexer):
         self.rules = {}
         self.lexer = lexer
+        self.last_key = ""
+        self.last_component = []
+        self.c_analyzed = 0
 
     def add_rule(self, key='', components=''):
         self.rules[key] = components
@@ -32,21 +35,30 @@ class Parser:
             keys = self.get_keys(component)
             tk = vec.copy()
             for key in keys:
+                self.last_component = keys
                 if key in self.rules:
                     value = self.syntax(key, vec)
                     if value:
                         vec = value[1]
+                    else:
+                        return False
                 else:
                     if self.compare(key, vec) is False:
                         print('_________________________')
                         vec = tk
                         cont = cont + 1
                         break
-
         if cont >= len(components):
             return False
         else:
-             return True, vec
+            return True, vec
+
+    def parse_vec(self, rule_key, vec):
+        value = self.syntax(rule_key, vec)
+        if value:
+            return self.last_key == self.last_component.pop()
+        else:
+            return False
 
     def compare(self, key, vec):
         if key in self.lexer.dictionary:
@@ -55,6 +67,7 @@ class Parser:
             else:
                 return False
             value = self.lexer.compare(key, data)
+            self.last_key = key
             print("{} -> \'{}\' = {}".format(key, data, value))
             vec.pop(0)
             return value

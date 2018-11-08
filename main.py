@@ -2,7 +2,9 @@ from components.lexer import Lexer
 from components.parser import Parser
 
 text = """
-    (a < b)
+    if(a > b)
+    {
+    }
 """
 
 
@@ -11,7 +13,7 @@ lexer = Lexer()
 lexer.add(key='<Integer>', re_key='([0-9])+')
 lexer.add(key='<VarName>', re_key='[a-zA-Z]([a-zA-Z]|[0-9])*')
 
-lexer.add(key='<Control>', default=['if'])
+lexer.add(key='<Control>', default=['if','while'])
 lexer.add(key='<Literal>', default=['int', 'string', 'bool'])
 lexer.add(key='<Comparator>', default=['==', '>', '<', '>=', '<='])
 lexer.add(key='<Equals>', default=['='])
@@ -36,12 +38,13 @@ parser.add_rule(key='<Comparable>', components='<VarName> <Comparator> <VarName>
 
 parser.add_rule(key='<Condition>', components='<LPar> <Comparable> <RPar>')
 
+parser.add_rule(key='<IfCondition>', components='<Control> <Condition> <LBrace> <RBrace>')
 
 tokens = lexer.split(text)
 
-syntax = parser.syntax('<Condition>', tokens)
+syntax = parser.parse_vec('<IfCondition>', tokens)
 if syntax:
-    print(syntax)
+    print(parser.last_key, parser.last_component)
     print('Analisis correcto')
 else:
     print('ERROR EN LA SINTAXIS')
